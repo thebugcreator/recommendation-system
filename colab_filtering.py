@@ -16,7 +16,7 @@ if __name__ == "__main__":
     parser.add_argument("--max_iter", type=int, default=10, help="Model max iteration")
     parser.add_argument("--reg_param", type=float, default=0.01, help="Model regParam")
     parser.add_argument("--bridge_col", type=str, default="rating", help="Interaction column")
-    
+    parser.add_argument("--xmx", type=str, default="16g", help="Maximum memory allocation")
     args = parser.parse_args()
     
     csv_path = args.csv_path
@@ -25,12 +25,12 @@ if __name__ == "__main__":
     max_iter = args.max_iter
     reg_param = args.reg_param
     bridge_col = args.bridge_col
-    
+    xmx = args.xmx
     
     spark = SparkSession \
         .builder \
         .appName("Python Spark RegSys example") \
-        .config("spark.some.config.option", "some-value") \
+        .config("spark.driver.memory", xmx) \
         .getOrCreate()
 
     ratings = spark.read.option("header", True).option("inferSchema", True).csv(csv_path)
