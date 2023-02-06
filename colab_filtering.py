@@ -10,7 +10,7 @@ spark = SparkSession \
     .config("spark.some.config.option", "some-value") \
     .getOrCreate()
 
-ratings = spark.read.option("header", True).csv("datasets/goodreads_interactions_sample.csv")
+ratings = spark.read.option("header", True).option("inferSchema", True).csv("datasets/goodreads_interactions_sample.csv")
 (training, test) = ratings.randomSplit([0.8, 0.2])
 
 als = ALS(maxIter=5, regParam=0.01, userCol="user_id", itemCol="book_id", ratingCol="rating",
