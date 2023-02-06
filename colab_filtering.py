@@ -4,8 +4,12 @@ from pyspark.sql import Row
 
 from pyspark.sql import SparkSession
 
+import argparse
+
+
+
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Measure semantic shift")
+    parser = argparse.ArgumentParser(description="Train the Colaborative Filtering Model with Spark")
     parser.add_argument("--csv_path", type=str, default="datasets/goodreads_interactions.csv", help="Path to the csv interaction file.")
     parser.add_argument("--save_model", type=bool, default=False, help="Decide whether or not to save the model")
     parser.add_argument("--metric", type=str, default="rmse", help="Evaluation metrics")
