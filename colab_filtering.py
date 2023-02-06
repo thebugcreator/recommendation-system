@@ -9,8 +9,8 @@ if __name__ == "__main__":
     parser.add_argument("--csv_path", type=str, default="datasets/goodreads_interactions.csv", help="Path to the csv interaction file.")
     parser.add_argument("--save_model", type=bool, default=False, help="Decide whether or not to save the model")
     parser.add_argument("--metric", type=str, default="rmse", help="Evaluation metrics")
-    parser.add_argument("--max_iter", type=int, default=10, help="")
-    parser.add_argument("--reg_param", type=float, default=0.1, help="")
+    parser.add_argument("--max_iter", type=int, default=10, help="Model max iteration")
+    parser.add_argument("--reg_param", type=float, default=0.01, help="Model regParam")
     parser.add_argument("--bridge_col", type=str, default="rating", help="Interaction column")
     
     args = parser.parse_args()
@@ -29,24 +29,28 @@ if __name__ == "__main__":
         .config("spark.some.config.option", "some-value") \
         .getOrCreate()
 
-    ratings = spark.read.option("header", True).option("inferSchema", True).csv("datasets/goodreads_interactions.csv")
+    ratings = spark.read.option("header", True).option("inferSchema", True).csv(csv_path)
     (training, test) = ratings.randomSplit([0.8, 0.2])
 
-    als = ALS(maxIter=5, regParam=0.01, userCol="user_id", itemCol="book_id", ratingCol="rating",
+    als = ALS(maxIter=max_iter, regParam=reg_param, userCol="user_id", itemCol="book_id", ratingCol=bridge_col,
               coldStartStrategy="drop")
     model = als.fit(training)
 
-    # Evaluate the model by computing the RMSE on the test data
+    # Evaluate the model
     predictions = model.transform(test)
-    evaluator = RegressionEvaluator(metricName="rmse", labelCol="rating",
+    evaluator = RegressionEvaluator(metricName=metric, labelCol="rating",
                                     predictionCol="prediction")
-    rmse = evaluator.evaluate(predictions)
-    print("Root-mean-square error = " + str(rmse))
+    score = evaluator.evaluate(predictions)
+    
+    print("Evaluation score using {0} : {1}".format(metric, score))
+
+    if save_model:
+        model.save("als_models")
 
     # Generate top 10 movie recommendations for each user
-    userRecs = model.recommendForAllUsers(10)
+    #userRecs = model.recommendForAllUsers(10)
     # Generate top 10 user recommendations for each book
-    bookRecs = model.recommendForAllItems(10)
+    #bookRecs = model.recommendForAllItems(10)
 
     # Generate top 10 movie recommendations for a specified set of users
     #users = ratings.select(als.getUserCol()).distinct().limit(3)
