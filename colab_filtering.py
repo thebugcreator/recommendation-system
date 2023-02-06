@@ -4,6 +4,14 @@ from pyspark.sql import Row
 
 from pyspark.sql import SparkSession
 
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Measure semantic shift')
+    parser.add_argument("--csv_path", type=str, default="datasets/goodreads_interactions.csv", help="Path to the csv interaction file.")
+    parser.add_argument('--save_model', type=bool, default=False, help="Decide whether or not to save the model")
+    parser.add_argument('--metric', type=str, default='rmse', help='Evaluation metrics')
+    parser.add_argument('--define_words_to_interpret', type=str, default='', help='Define a set of words separated by ";" for interpretation if you do not wish to save data for all words.')
+
+
 spark = SparkSession \
     .builder \
     .appName("Python Spark RegSys example") \
