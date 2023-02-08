@@ -5,6 +5,8 @@ from lightfm.cross_validation import random_train_test_split
 from lightfm.evaluation import auc_score
 from pandas.api.types import CategoricalDtype
 import pickle
+import json
+import numpy as np
 
 #import the dataset
 df_csv = pd.read_csv("./data/data_sample.csv")
@@ -54,3 +56,47 @@ with open('model.pickle', 'wb') as fle:
 
 auc = auc_score(model, x_test, num_threads=4).mean()
 print(f"AUC is :  {auc}")
+
+# get labels of books
+item_labels = df_csv["book_id"]
+# get books name
+with open("items_labels.json","r") as f:
+    labels = json.load(f)
+
+# get mapping of books and labels
+book_map = pd.read_csv("data/book_id_map.csv", sep=",")
+
+# transform movie index into dict and reverse
+movie_dict = movie_index.to_dict()
+movie_dict_r = {v:k for k,v in movie_dict.items()}
+
+def sample_recommendation(model, user_ids, random_user=None):
+
+    n_users, n_items = user_mat.shape
+    if random_user is not None:
+        user_ids = user_ids[:1]
+    #print(user_ids)
+    for user_id in user_ids:
+        user_movie = [item_labels[movie_dict_r[k]] for k in user_mat[user_id].indices]
+        known_positives = [item_labels[movie_dict_r[k]] for k in user_mat[user_id].indices]
+
+        scores = model.predict(user_id, np.arange(n_items), item_features=random_user)
+        top_items = [item_labels[movie_dict_r[k]] for k in np.argsort(-scores)]
+
+        print("User %s" % user_id)
+        print("     Known positives:")
+
+        for x in known_positives[:5]:
+            id = book_map.iloc[item_labels[movie_dict_r[x]],1]
+            x = labels[str(id)]
+            print("        %s" % x)
+
+        print("     Recommended:")
+
+        for x in top_items[:5]:
+            id = book_map.iloc[item_labels[movie_dict_r[x]],1]
+            x = labels[str(id)]
+            print("        %s" % x)
+
+new_user = np.random.randint(5, size=(user_mat.shape[1], 1))
+sample_recommendation(model, user_ids=[222,23], random_user=None)
