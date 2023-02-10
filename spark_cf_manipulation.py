@@ -8,7 +8,6 @@ xmx = "16g"
 spark = SparkSession \
     .builder \
     .appName("Python Spark RegSys example") \
-    .config("spark.driver.memory", xmx) \
     .getOrCreate()
 
 # TODO: Load the spark ALS model
