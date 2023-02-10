@@ -1,13 +1,11 @@
 import pandas as pd
-from lightfm import LightFM
 from scipy import sparse
-from lightfm.evaluation import auc_score
 from pandas.api.types import CategoricalDtype
 import pickle
 import json
 import numpy as np
 
-def data_csr(df_csv):
+def data_to_csr(df_csv):
 
     # build the scipy csr matrix
     users = df_csv["user_id"].unique()
@@ -23,20 +21,8 @@ def data_csr(df_csv):
     print(f"Number of book used: {shape[0]}")
     print(f"Number of users: {shape[1]}")
 
-    return user_mat
+    return user_mat, movie_index
 
-
-
-# Split data in train/test
-
-# Modelling LightFM
-
-model = LightFM(loss='warp',
-                random_state=2016,
-                learning_rate=0.7,
-                no_components=300,
-                learning_schedule="adadelta",
-                user_alpha=0.0005)
 
 def get_model(model, x_train =None, train=False):
 
@@ -46,29 +32,12 @@ def get_model(model, x_train =None, train=False):
                         epochs=10,
                         num_threads=16, verbose=False)
         print("Model trained and save at ./lightfm-model/")
-        with open('model.pickle', 'wb') as fle:
+        with open('./lightfm-model/model.pickle', 'wb') as fle:
             pickle.dump(model, fle, protocol=pickle.HIGHEST_PROTOCOL)
     else:
         model = pickle.loads("./lightfm-model/model.pickle")
     return model
 
-
-
-auc = auc_score(model, x_test, num_threads=4).mean()
-print(f"AUC is :  {auc}")
-
-# get labels of books
-item_labels = df_csv["book_id"]
-# get books name
-with open("items_labels.json","r") as f:
-    labels = json.load(f)
-
-# get mapping of books and labels
-book_map = pd.read_csv("data/book_id_map.csv", sep=",")
-
-# transform movie index into dict and reverse
-movie_dict = movie_index.to_dict()
-movie_dict_r = {v:k for k,v in movie_dict.items()}
 
 def sample_recommendation(model, user_ids, random_user=None):
 
@@ -97,6 +66,3 @@ def sample_recommendation(model, user_ids, random_user=None):
             id = book_map.iloc[item_labels[movie_dict_r[x]],1]
             x = labels[str(id)]
             print("        %s" % x)
-
-new_user = np.random.randint(5, size=(user_mat.shape[1], 1))
-sample_recommendation(model, user_ids=[222,23], random_user=None)
