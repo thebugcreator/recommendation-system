@@ -38,6 +38,14 @@ model = LightFM(loss='warp',
                 no_components=300,
                 learning_schedule="adadelta",
                 user_alpha=0.0005)
+
+
 model = get_model(model, x_train =None, train=False)
 new_user = np.random.randint(5, size=(user_mat.shape[1], 1))
-sample_recommendation(model, user_ids=[222,23], random_user=None)
+
+if __name__ == "__main__":
+
+
+    sample_recommendation(model=model, user_ids=[222,23], user_mat=user_mat, item_labels=item_labels,
+    movie_dict_r=movie_dict_r,labels=labels,
+     book_map=book_map,random_user=None)

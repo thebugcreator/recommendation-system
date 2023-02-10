@@ -35,11 +35,13 @@ def get_model(model, x_train =None, train=False):
         with open('./lightfm-model/model.pickle', 'wb') as fle:
             pickle.dump(model, fle, protocol=pickle.HIGHEST_PROTOCOL)
     else:
-        model = pickle.loads("./lightfm-model/model.pickle")
+        with open('./lightfm-model/model.pickle', 'rb') as fp:
+            model = pickle.load(fp)
     return model
 
 
-def sample_recommendation(model, user_ids, random_user=None):
+def sample_recommendation(model, user_ids,user_mat, item_labels,
+                            movie_dict_r, book_map, labels, random_user=None):
 
     n_users, n_items = user_mat.shape
     if random_user is not None:
