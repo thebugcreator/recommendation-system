@@ -5,7 +5,7 @@ from surprise import KNNBasic, KNNWithMeans, accuracy
 from surprise.model_selection import train_test_split
 
 
-df = pd.read_csv("goodreads_interactions.csv")
+df = pd.read_csv("datasets/goodreads_interactions_sample.csv")
 
 item = df["book_id"]
 user = df["user_id"]
