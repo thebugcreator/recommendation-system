@@ -14,9 +14,8 @@ spark = SparkSession \
 # TODO: Load the spark ALS model
 model = ALSModel.load("als_model")
 # TODO: Lazy loading the related dataframes
-#df_users = spark.read.option("header", True).option("inferSchema", True).csv("datasets/goodreads_users.csv")
-df_books = spark.read.option("header", True).option("inferSchema", True).csv("datasets/goodreads_books_sample.csv")
 
+df_books = spark.read.option("header", True).option("inferSchema", True).csv("datasets/goodreads_books_sample.csv")
 
 def recommend_books_for_each_user(n=10):
     """Generate top 10 movie recommendations for each user"""
@@ -31,12 +30,12 @@ def recommend_users_for_each_book(n=10):
 
 def recommend_books_for_specific_users(user_ids, n=10):
     """Generate top 10 movie recommendations for a specified set of users"""
-    users = ratings.select(als.getUserCol()).distinct().limit(3)
-    userSubsetRecs = model.recommendForUserSubset(users, n)
+    #users = ratings.select(als.getUserCol()).distinct().limit(3)
+    userSubsetRecs = model.recommendForUserSubset(user_ids, n)
     return userSubsetRecs
 
 def recommend_users_for_specific_books(book_ids, n=10):
     """Generate top 10 user recommendations for a specified set of books"""
-    books = ratings.select(als.getItemCol()).distinct().limit(3)
-    booksSubSetRecs = model.recommendForItemSubset(books, n)
+    #books = ratings.select(als.getItemCol()).distinct().limit(3)
+    booksSubSetRecs = model.recommendForItemSubset(book_ids, n)
     return booksSubSetRecs
