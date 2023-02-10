@@ -51,14 +51,3 @@ if __name__ == "__main__":
     if save_model:
         model.save("als_models")
 
-    # Generate top 10 movie recommendations for each user
-    #userRecs = model.recommendForAllUsers(10)
-    # Generate top 10 user recommendations for each book
-    #bookRecs = model.recommendForAllItems(10)
-
-    # Generate top 10 movie recommendations for a specified set of users
-    #users = ratings.select(als.getUserCol()).distinct().limit(3)
-    #userSubsetRecs = model.recommendForUserSubset(users, 10)
-    # Generate top 10 user recommendations for a specified set of books
-    #books = ratings.select(als.getItemCol()).distinct().limit(3)
-    #booksSubSetRecs = model.recommendForItemSubset(books, 10)
