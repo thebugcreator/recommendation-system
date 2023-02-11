@@ -64,7 +64,12 @@ def sample_recommendation(model, user_ids,user_mat, item_labels,
 
         print("     Recommended:")
 
-        for x in top_items[:5]:
-            id = book_map.iloc[item_labels[movie_dict_r[x]],1]
-            x = labels[str(id)]
-            print("        %s" % x)
+        i = 0
+        for x in top_items:
+            if x in movie_dict_r:
+                i += 1
+                id = book_map.iloc[item_labels[movie_dict_r[x]],1]
+                x = labels[str(id)]
+                print("        %s" % x)
+                if i >5:
+                    break

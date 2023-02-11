@@ -2,6 +2,7 @@ from cf_modeling import data_to_csr, sample_recommendation, get_model
 import pandas as pd
 from lightfm.cross_validation import random_train_test_split
 import json
+from scipy import sparse
 from lightfm import LightFM
 import numpy as np
 
@@ -41,11 +42,11 @@ model = LightFM(loss='warp',
 
 
 model = get_model(model, x_train =None, train=False)
-new_user = np.random.randint(5, size=(user_mat.shape[1], 1))
+new_user = sparse.csr_matrix(np.random.randint(5, size=(user_mat.shape[1], 1)))
 
 if __name__ == "__main__":
 
 
     sample_recommendation(model=model, user_ids=[222,23], user_mat=user_mat, item_labels=item_labels,
     movie_dict_r=movie_dict_r,labels=labels,
-     book_map=book_map,random_user=None)
+     book_map=book_map,random_user=new_user)
