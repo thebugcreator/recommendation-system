@@ -5,7 +5,7 @@ import random
 import implicit 
 import argparse
 
-from implicit.evaluation import precision_at_k, train_test_split, mean_average_precision_at_k
+from implicit.evaluation import precision_at_k, train_test_split, mean_average_precision_at_k, AUC_at_k
 
 def calc_confidence(is_read, rating, is_reviewed, weights=(1,1,1)):
     x, y, z = weights
@@ -25,7 +25,7 @@ if __name__ == "__main__":
     parser.add_argument("--regularization", type=float, default=0.1, help="Model regularisation")
     parser.add_argument("--iterations", type=int, default=20, help="Model iteration")
     parser.add_argument("--alpha", type=int, default=40, help="Model alpha")
-    parser.add_argument("--evaluation", type=bool, default=True, help="Model evaluation")
+    parser.add_argument("--evaluation", type=bool, default=False, help="Model evaluation")
     args = parser.parse_args()
     
     csv_path = args.csv_path
@@ -63,9 +63,10 @@ if __name__ == "__main__":
     print("Finish training the model")
     
     if evaluation:
-        pak = precision_at_k(model=model, train_user_items=train_matrix, test_user_items=test_matrix, K=10)
-        mapak = mean_average_precision_at_k(model=model, train_user_items=train_matrix, test_user_items=test_matrix, K=10)
-        eval_results = "\n".join([str(pak),str(mapak)])
+        pak = precision_at_k(model=model, train_user_items=train_matrix, test_user_items=test_matrix, K=10, num_threads=0)
+        mapak = mean_average_precision_at_k(model=model, train_user_items=train_matrix, test_user_items=test_matrix, K=10, num_threads=0)
+		aak = AUC_at_k(model=model, train_user_items=train_matrix, test_user_items=test_matrix, K=10, num_threads=0)
+        eval_results = str(pak) + " " +(mapak) + " " + str(aak)
         np.savetxt("implicit_als_model/eval.txt", eval_results)
     
     if save_model:
