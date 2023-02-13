@@ -22,7 +22,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Train the Colaborative Filtering Model with Implicit")
     parser.add_argument("--csv_path", type=str, default="datasets/goodreads_interactions.csv", help="Path to the csv interaction file.")
     parser.add_argument("--save_model", type=bool, default=True, help="Decide whether or not to save the model")
-	parser.add_argument("--model_dir", type=str, default="implicit_als_model/", help="Path to the folder that contains model.")
+    parser.add_argument("--model_dir", type=str, default="implicit_als_model/", help="Path to the folder that contains model.")
     parser.add_argument("--factors", type=int, default=200, help="Model factors")
     parser.add_argument("--regularization", type=float, default=0.1, help="Model regularisation")
     parser.add_argument("--iterations", type=int, default=20, help="Model iteration")
