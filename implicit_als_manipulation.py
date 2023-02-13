@@ -20,9 +20,9 @@ if __name__ == "__main__":
     model_path = model_folder + "model.npz"
 	model_data = np.load(als_model_file, allow_pickle=True)
 	
-    model = implicit.als.AlternatingLeastSquares(factors=200)
-	model.item_factors = model_data['model.item_factors']
-	model.user_factors = model_data['model.user_factors']
+    model = implicit.als.AlternatingLeastSquares(factors=model_data["model.factors"])
+	model.item_factors = model_data["model.item_factors"]
+	model.user_factors = model_data["model.user_factors"]
 	model._YtY = model.item_factors.T.dot(model.item_factors)
 	
     sparse_book_user = sparse.load_npz(model_folder + "book_user.npz")

@@ -69,17 +69,15 @@ if __name__ == "__main__":
     print("Finish training the model")
     
     eval_results = dict()
-    
     if evaluation:
         eval_results["pak"] = precision_at_k(model=model, train_user_items=train_matrix, test_user_items=test_matrix, K=eval_k, num_threads=0)
         eval_results["mapak"] = mean_average_precision_at_k(model=model, train_user_items=train_matrix, test_user_items=test_matrix, K=eval_k, num_threads=0)
         eval_results["aak"] = AUC_at_k(model=model, train_user_items=train_matrix, test_user_items=test_matrix, K=eval_k, num_threads=0)
-        file = open(model_dir + "eval.txt", "wb")
-        pickle.dump(eval_results, file)
-        file.close()
+        eval_path = model_dir + "eval.txt"
+        np.savez(eval_path, **eval_path)
     
     if save_model:
-        model_data = {'model.item_factors': model.item_factors, 'model.user_factors': model.user_factors}
+        model_data = {"model.item_factors": model.item_factors, "model.user_factors": model.user_factors, "model.factors" : factors}
         model_path = model_dir + "model.npz"
         np.savez(model_path, **model_data)
     if save_sparses:
