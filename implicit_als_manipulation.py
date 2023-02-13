@@ -7,7 +7,7 @@ import argparse
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Train the Colaborative Filtering Model with Implicit")
-    parser.add_argument("--model_path", type=str, default="datasets/goodreads_interactions.csv", help="Path to the csv interaction file.")
+    parser.add_argument("--model_path", type=str, default="implicit_als_model/", help="Path to the model folder.")
     parser.add_argument("--type", default="user", const="all", nargs="?", help="Choose the subject for recommendation", choices=["user", "book"])
     parser.add_argument("query", type=int, help="ID of the subject.")
     args = parser.parse_args()
