@@ -26,6 +26,7 @@ if __name__ == "__main__":
     parser.add_argument("--iterations", type=int, default=20, help="Model iteration")
     parser.add_argument("--alpha", type=int, default=40, help="Model alpha")
     parser.add_argument("--evaluation", type=bool, default=False, help="Model evaluation")
+    parser.add_argument("--k", type=int, default=10, help="Model evaluation at K=k")
     args = parser.parse_args()
     
     csv_path = args.csv_path
@@ -35,7 +36,7 @@ if __name__ == "__main__":
     iterations = args.iterations
     alpha = args.alpha
     evaluation = args.evaluation
-    
+    eval_k = args.k
     
     print("Looking into the dataset at ", csv_path)
     # Load the interaction dataset
@@ -63,10 +64,10 @@ if __name__ == "__main__":
     print("Finish training the model")
     
     if evaluation:
-        pak = precision_at_k(model=model, train_user_items=train_matrix, test_user_items=test_matrix, K=10, num_threads=0)
-        mapak = mean_average_precision_at_k(model=model, train_user_items=train_matrix, test_user_items=test_matrix, K=10, num_threads=0)
-        aak = AUC_at_k(model=model, train_user_items=train_matrix, test_user_items=test_matrix, K=10, num_threads=0)
-        eval_results = str(pak) + " " +(mapak) + " " + str(aak)
+        pak = precision_at_k(model=model, train_user_items=train_matrix, test_user_items=test_matrix, K=eval_k, num_threads=0)
+        mapak = mean_average_precision_at_k(model=model, train_user_items=train_matrix, test_user_items=test_matrix, K=eval_k, num_threads=0)
+        aak = AUC_at_k(model=model, train_user_items=train_matrix, test_user_items=test_matrix, K=eval_k, num_threads=0)
+        eval_results = str(pak) + " " + str(mapak) + " " + str(aak)
         np.savetxt("implicit_als_model/eval.txt", eval_results)
     
     if save_model:
