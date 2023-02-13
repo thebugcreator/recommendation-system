@@ -65,7 +65,7 @@ if __name__ == "__main__":
     if evaluation:
         pak = precision_at_k(model=model, train_user_items=train_matrix, test_user_items=test_matrix, K=10, num_threads=0)
         mapak = mean_average_precision_at_k(model=model, train_user_items=train_matrix, test_user_items=test_matrix, K=10, num_threads=0)
-		aak = AUC_at_k(model=model, train_user_items=train_matrix, test_user_items=test_matrix, K=10, num_threads=0)
+        aak = AUC_at_k(model=model, train_user_items=train_matrix, test_user_items=test_matrix, K=10, num_threads=0)
         eval_results = str(pak) + " " +(mapak) + " " + str(aak)
         np.savetxt("implicit_als_model/eval.txt", eval_results)
     
