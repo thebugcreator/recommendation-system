@@ -66,7 +66,7 @@ if __name__ == "__main__":
         pak = precision_at_k(model=model, train_user_items=train_matrix, test_user_items=test_matrix, K=10)
         mapak = mean_average_precision_at_k(model=model, train_user_items=train_matrix, test_user_items=test_matrix, K=10)
         eval_results = "\n".join([str(pak),str(mapak)])
-        np.savetxt("implicit_als_model/eval.txt")
+        np.savetxt("implicit_als_model/eval.txt", eval_results)
     
     if save_model:
         model.save("implicit_als_model/model")
