@@ -3,6 +3,7 @@ import numpy as np
 import scipy.sparse as sparse
 import random
 import implicit
+import argparse
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Train the Colaborative Filtering Model with Implicit")
