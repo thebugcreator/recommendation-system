@@ -27,7 +27,6 @@ if __name__ == "__main__":
     
     csv_path = args.csv_path
     save_model = args.save_model
-    metric = args.metric
     factors = args.factors
     regularization = args.regularization
     iterations = args.iterations
