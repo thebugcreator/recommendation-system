@@ -30,12 +30,12 @@ if __name__ == "__main__":
     df = pd.read_csv(csv_path)
     
     # Start creating the confidence matrix
-    df["confidence"] = [calc_confidence(row[["is_read","rating","is_reviewed"]]) for index, row in df.iterrows()]
+    # df["confidence"] = [calc_confidence(*(row[["is_read","rating","is_reviewed"]].values)) for index, row in df.iterrows()]
     
-    data = df[["user_id", "book_id", "confidence"]]
+    data = df[["user_id", "book_id", "rating"]]
     
-    sparse_item_user = sparse.csr_matrix((data['confidence'].astype(float), (data['book_id'], data['user_id'])))
-    sparse_user_item = sparse.csr_matrix((data['confidence'].astype(float), (data['user_id'], data['book_id'])))
+    sparse_item_user = sparse.csr_matrix((data['rating'].astype(float), (data['book_id'], data['user_id'])))
+    sparse_user_item = sparse.csr_matrix((data['rating'].astype(float), (data['user_id'], data['book_id'])))
     
     # Building the model
     model = implicit.als.AlternatingLeastSquares(factors=20, regularization=0.1, iterations=20)
