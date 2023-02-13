@@ -22,6 +22,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Train the Colaborative Filtering Model with Implicit")
     parser.add_argument("--csv_path", type=str, default="datasets/goodreads_interactions.csv", help="Path to the csv interaction file.")
     parser.add_argument("--save_model", type=bool, default=True, help="Decide whether or not to save the model")
+    parser.add_argument("--save_sparses", type=bool, default=False, help="Decide whether or not to save the sparses")
     parser.add_argument("--model_dir", type=str, default="implicit_als_model/", help="Path to the folder that contains model.")
     parser.add_argument("--factors", type=int, default=200, help="Model factors")
     parser.add_argument("--regularization", type=float, default=0.1, help="Model regularisation")
@@ -40,6 +41,7 @@ if __name__ == "__main__":
     evaluation = args.evaluation
     eval_k = args.k
     model_dir = args.model_dir
+    save_sparses = args.save_sparses
     
     print("Looking into the dataset at ", csv_path)
     # Load the interaction dataset
@@ -77,8 +79,9 @@ if __name__ == "__main__":
         file.close()
     
     if save_model:
-        model.save(model_dir + "model")
-        print("Saved the model")
+        model_data = {'model.item_factors': model.item_factors, 'model.user_factors': model.user_factors}
+        model_path = model_dir + "model.npz"
+        np.savez(model_path, **model_data)
+    if save_sparses:
         sparse.save_npz(model_dir + "book_user.npz", sparse_item_user)
         sparse.save_npz(model_dir + "user_book.npz", sparse_user_item)
-        print("Saved the model")
