@@ -28,6 +28,6 @@ if __name__ == "__main__":
         recommendation = model.recommend(query, sparse_book_user[query])
     else:
         print("Invalid type")
-        return
+        exit()
     
     print(recommendation)
