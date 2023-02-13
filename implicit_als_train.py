@@ -71,6 +71,6 @@ if __name__ == "__main__":
     if save_model:
         model.save("implicit_als_model/model")
         print("Saved the model")
-        sparse.save_npz("implicit_als_model/item_user.npz", sparse_item_user)
-        sparse.save_npz("implicit_als_model/user_item.npz", sparse_user_item)
+        sparse.save_npz("implicit_als_model/book_user.npz", sparse_item_user)
+        sparse.save_npz("implicit_als_model/user_book.npz", sparse_user_item)
         print("Saved the model")
