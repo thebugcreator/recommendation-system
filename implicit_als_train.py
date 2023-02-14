@@ -21,7 +21,7 @@ def calc_confidence(is_read, rating, is_reviewed, weights=(1,1,1)):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Train the Colaborative Filtering Model with Implicit")
     parser.add_argument("--csv_path", type=str, default="datasets/goodreads_interactions.csv", help="Path to the csv interaction file.")
-    parser.add_argument("--save_model", type=bool, default=True, help="Decide whether or not to save the model")
+    parser.add_argument("--save_model", type=bool, default=False, help="Decide whether or not to save the model")
     parser.add_argument("--save_sparses", type=bool, default=False, help="Decide whether or not to save the sparses")
     parser.add_argument("--model_dir", type=str, default="implicit_als_model/", help="Path to the folder that contains model.")
     parser.add_argument("--factors", type=int, default=200, help="Model factors")
@@ -30,6 +30,8 @@ if __name__ == "__main__":
     parser.add_argument("--alpha", type=int, default=40, help="Model alpha")
     parser.add_argument("--evaluation", type=bool, default=False, help="Model evaluation")
     parser.add_argument("--k", type=int, default=10, help="Model evaluation at K=k")
+    parser.add_argument("--demo_mode", type=bool, default=False, help="Model demo mode")
+    
     args = parser.parse_args()
     
     csv_path = args.csv_path
@@ -42,7 +44,7 @@ if __name__ == "__main__":
     eval_k = args.k
     model_dir = args.model_dir
     save_sparses = args.save_sparses
-    
+    demo_mode = args.demo_mode
     print("Looking into the dataset at ", csv_path)
     # Load the interaction dataset
     df = pd.read_csv(csv_path)
@@ -86,3 +88,13 @@ if __name__ == "__main__":
     if save_sparses:
         sparse.save_npz(model_dir + "book_user.npz", sparse_item_user)
         sparse.save_npz(model_dir + "user_book.npz", sparse_user_item)
+    
+    if demo_mode:
+        user_id = 1045
+        dfbooks = pd.read_json("datasets/goodreads_books.json", lines=True)
+        recommendation = model.recommend(user_id, sparse_user_item[user_id])
+        for i, item in enumerate(recommendation[0]):
+            recombook = dfbooks[dfbooks["book_id"]=recomid]
+            recomtitle = recombook["title"].value
+            recomrate = recommendation[1][i]
+            print(item, recomtitle, recomrate)
