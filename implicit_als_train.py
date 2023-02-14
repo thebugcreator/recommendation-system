@@ -79,8 +79,10 @@ if __name__ == "__main__":
 
     if save_model:
         model_data = {"model.item_factors": model.item_factors, "model.user_factors": model.user_factors, "model.factors" : factors}
-        model_path = model_dir + "model.npz"
-        np.savez(model_path, model_data)
+        model_path = model_dir + "model_param.npz"
+        np.savez(model_path, **model_data)
+        model.save(model_dir, "model.npz")
+
     if save_sparses:
         sparse.save_npz(model_dir + "book_user.npz", sparse_item_user)
         sparse.save_npz(model_dir + "user_book.npz", sparse_user_item)
